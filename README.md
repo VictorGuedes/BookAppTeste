@@ -2,7 +2,7 @@
 
 Implemented in Java with:
 
-## Libraries Used:
+## Libraries:
 - [Hilt](https://developer.android.com/training/dependency-injection/hilt-android)
 - [RxJava3](https://github.com/ReactiveX/RxJava)
 - [ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel)
