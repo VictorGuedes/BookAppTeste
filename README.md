@@ -1,5 +1,7 @@
 # BookAppTeste
 
+Implemented in Java with:
+
 ## Libraries Used:
 - [Hilt](https://developer.android.com/training/dependency-injection/hilt-android)
 - [RxJava3](https://github.com/ReactiveX/RxJava)
