@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">BookAppTeste</string>
+    <string name="title">Title</string>
+    <string name="author">Author</string>
+    <string name="Description">Description</string>
+    <string name="buy">Buy book</string>
+</resources>
