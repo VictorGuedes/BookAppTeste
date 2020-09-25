@@ -185,6 +185,17 @@
 
         </androidx.core.widget.NestedScrollView>
 
+        <Button
+            android:id="@+id/buy_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:textColor="@color/white_background"
+            android:background="@color/colorAccent"
+            android:text="@string/buy"
+            android:visibility="gone"
+            android:onClick="openBuyLink">
+        </Button>
 
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton

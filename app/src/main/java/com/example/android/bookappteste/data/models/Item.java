@@ -37,6 +37,11 @@ public class Item implements Serializable {
     @Expose
     private VolumeInfo volumeInfo;
 
+    @Embedded
+    @SerializedName("saleInfo")
+    @Expose
+    private SaleInfo saleInfo;
+
     public String getKind() {
         return kind;
     }
@@ -77,4 +82,11 @@ public class Item implements Serializable {
         this.volumeInfo = volumeInfo;
     }
 
+    public SaleInfo getSaleInfo() {
+        return saleInfo;
+    }
+
+    public void setSaleInfo(SaleInfo saleInfo) {
+        this.saleInfo = saleInfo;
+    }
 }

@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -36,14 +38,6 @@ public class DetailActivity extends AppCompatActivity {
         actualBook = (Item) getIntent().getSerializableExtra(BindingAdapterLayout.BOOK);
 
         populateView();
-
-        activityDetailBinding.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(DetailActivity.this, "Not implemented :(", Toast.LENGTH_SHORT).show();
-            }
-        });
-
     }
 
     private void populateView(){
@@ -51,11 +45,30 @@ public class DetailActivity extends AppCompatActivity {
         activityDetailBinding.authorTextView.setText(actualBook.getVolumeInfo().getAuthors().get(0));
         activityDetailBinding.descriptionTextView.setText(actualBook.getVolumeInfo().getDescription());
 
+        if (checkBookHasBuyLink()) activityDetailBinding.buyButton.setVisibility(View.VISIBLE);
+
         Glide.with(this)
                 .load(actualBook.getVolumeInfo().getImageLinks().getSmallThumbnail())
                 .into(activityDetailBinding.imageViewDetails);
     }
 
     public void saveAsFavorite(View view) {
+        Toast.makeText(DetailActivity.this, "Not implemented :(", Toast.LENGTH_SHORT).show();
     }
+
+    public void openBuyLink(View view) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(actualBook.getSaleInfo().getBuyLink()));
+        browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        browserIntent.setPackage("com.android.chrome");
+        startActivity(browserIntent);
+    }
+
+    private boolean checkBookHasBuyLink(){
+        return actualBook != null
+                && actualBook.getSaleInfo().getBuyLink() != null
+                && actualBook.getSaleInfo().getSaleability() != null
+                && !actualBook.getSaleInfo().getBuyLink().isEmpty()
+                && actualBook.getSaleInfo().getSaleability().equals("FOR_SALE");
+    }
+
 }

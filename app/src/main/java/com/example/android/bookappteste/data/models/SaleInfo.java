@@ -11,23 +11,13 @@ import java.io.Serializable;
 @Entity(tableName = "SaleInfo")
 public class SaleInfo implements Serializable {
 
-    @SerializedName("country")
-    @Expose
-    private String country;
     @SerializedName("saleability")
     @Expose
     private String saleability;
-    @SerializedName("isEbook")
+
+    @SerializedName("buyLink")
     @Expose
-    private Boolean isEbook;
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
+    private String buyLink;
 
     public String getSaleability() {
         return saleability;
@@ -37,12 +27,11 @@ public class SaleInfo implements Serializable {
         this.saleability = saleability;
     }
 
-    public Boolean getIsEbook() {
-        return isEbook;
+    public String getBuyLink() {
+        return buyLink;
     }
 
-    public void setIsEbook(Boolean isEbook) {
-        this.isEbook = isEbook;
+    public void setBuyLink(String buyLink) {
+        this.buyLink = buyLink;
     }
-
 }
