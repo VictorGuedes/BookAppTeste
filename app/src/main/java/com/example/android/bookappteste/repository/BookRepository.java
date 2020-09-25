@@ -1,7 +1,5 @@
 package com.example.android.bookappteste.repository;
 
-import androidx.lifecycle.LiveData;
-
 import com.example.android.bookappteste.data.models.BookResponse;
 import com.example.android.bookappteste.data.models.Item;
 import com.example.android.bookappteste.database.BookDao;
@@ -11,6 +9,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Observable;
 
 public class BookRepository {
@@ -29,19 +29,19 @@ public class BookRepository {
     }
 
 
-    public void deleteBook(Item item){
-        bookDao.deletBook(item);
+    public Completable deleteBook(Item item){
+        return bookDao.deletBook(item);
     }
 
-    public void getBookById(String id){
-        bookDao.getBookById(id);
+    public Flowable<List<Item>> getBookById(String id){
+        return  bookDao.getBookById(id);
     }
 
-    public void insertBook(Item item){
-        bookDao.insertBook(item);
+    public Completable insertBook(Item item){
+        return bookDao.insertBook(item);
     }
 
-    public LiveData<List<Item>> getFavoriteBooks(){
+    public Flowable<List<Item>> getFavoriteBooks(){
         return bookDao.getAllFavoriteBooks();
     }
 

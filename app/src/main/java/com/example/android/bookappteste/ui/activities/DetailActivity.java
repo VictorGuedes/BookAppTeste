@@ -1,15 +1,16 @@
 package com.example.android.bookappteste.ui.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
 import com.example.android.bookappteste.R;
@@ -17,8 +18,6 @@ import com.example.android.bookappteste.data.models.Item;
 import com.example.android.bookappteste.databinding.ActivityDetailBinding;
 import com.example.android.bookappteste.ui.bindingadapter.BindingAdapterLayout;
 import com.example.android.bookappteste.viewmodel.BookViewModel;
-
-import java.util.Objects;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -28,6 +27,7 @@ public class DetailActivity extends AppCompatActivity {
     private ActivityDetailBinding activityDetailBinding;
     private Item actualBook;
     private BookViewModel bookViewModel;
+    private boolean bookInDatabase = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +37,11 @@ public class DetailActivity extends AppCompatActivity {
         setSupportActionBar(activityDetailBinding.toolbar);
         actualBook = (Item) getIntent().getSerializableExtra(BindingAdapterLayout.BOOK);
 
+        bookViewModel = new ViewModelProvider(this).get(BookViewModel.class);
+
         populateView();
+
+        observeData();
     }
 
     private void populateView(){
@@ -52,8 +56,9 @@ public class DetailActivity extends AppCompatActivity {
                 .into(activityDetailBinding.imageViewDetails);
     }
 
-    public void saveAsFavorite(View view) {
-        Toast.makeText(DetailActivity.this, "Not implemented :(", Toast.LENGTH_SHORT).show();
+    public void saveDeleteFavorite(View view) {
+        if (bookInDatabase) bookViewModel.deleteBook(actualBook);
+        else bookViewModel.insertBook(actualBook);
     }
 
     public void openBuyLink(View view) {
@@ -71,4 +76,32 @@ public class DetailActivity extends AppCompatActivity {
                 && actualBook.getSaleInfo().getSaleability().equals("FOR_SALE");
     }
 
+
+    private void observeData(){
+        bookViewModel.getDataWasInsert().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (aBoolean){
+                    Toast.makeText(DetailActivity.this, "Book was add", Toast.LENGTH_SHORT).show();
+                    activityDetailBinding.fab.setBackgroundTintList(ContextCompat.getColorStateList(DetailActivity.this, R.color.yellow_background));
+                    bookInDatabase = true;
+                } else {
+                    Toast.makeText(DetailActivity.this, "Something went wrong :(", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        bookViewModel.getDataWasDeleted().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                if (aBoolean){
+                    Toast.makeText(DetailActivity.this, "Book was deleted", Toast.LENGTH_SHORT).show();
+                    activityDetailBinding.fab.setBackgroundTintList(ContextCompat.getColorStateList(DetailActivity.this, R.color.colorAccent));
+                    bookInDatabase = false;
+                } else {
+                    Toast.makeText(DetailActivity.this, "Something went wrong :(", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
 }

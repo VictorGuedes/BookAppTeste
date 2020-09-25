@@ -6,7 +6,6 @@ import androidx.hilt.lifecycle.ViewModelInject;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import androidx.paging.PagedList;
 
 import com.example.android.bookappteste.data.models.BookResponse;
 import com.example.android.bookappteste.data.models.Item;
@@ -23,13 +22,16 @@ public class BookViewModel extends ViewModel {
 
     private BookRepository repository;
     private MutableLiveData<List<Item>> bookList = new MutableLiveData<>();
-
     private LiveData<List<Item>> favoriteBooks = null;
+
+    private MutableLiveData<Boolean> dataWasInsert = new MutableLiveData<>();
+
+    private MutableLiveData<Boolean> dataWasDeleted = new MutableLiveData<>();
 
     @ViewModelInject
     public BookViewModel(BookRepository repository){
         this.repository = repository;
-        favoriteBooks = repository.getFavoriteBooks();
+        //favoriteBooks = repository.getFavoriteBooks();
     }
 
     public MutableLiveData<List<Item>> getBookList() {
@@ -40,15 +42,34 @@ public class BookViewModel extends ViewModel {
         return favoriteBooks;
     }
 
+    public MutableLiveData<Boolean> getDataWasInsert() {
+        return dataWasInsert;
+    }
+
+    public MutableLiveData<Boolean> getDataWasDeleted() {
+        return dataWasDeleted;
+    }
+
     public void insertBook(Item book){
-        repository.insertBook(book);
+        repository.insertBook(book)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        () -> dataWasInsert.setValue(true),
+                        throwable -> dataWasInsert.setValue(false)
+                );
     }
     public void deleteBook(Item book){
-        repository.deleteBook(book);
+        repository.deleteBook(book).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        () -> dataWasDeleted.setValue(true),
+                        throwable -> dataWasDeleted.setValue(false)
+                );;
     }
 
     public void getFavoriteBooksDB(){
-        favoriteBooks = repository.getFavoriteBooks();
+        //favoriteBooks = repository.getFavoriteBooks();
     }
 
     public void getBookListFromService(){

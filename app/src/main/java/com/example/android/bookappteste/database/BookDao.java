@@ -1,6 +1,5 @@
 package com.example.android.bookappteste.database;
 
-import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -10,19 +9,23 @@ import com.example.android.bookappteste.data.models.Item;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Flowable;
+
+
 @Dao
 public interface BookDao {
 
     @Insert
-    void insertBook(Item itemBook);
+    Completable insertBook(Item itemBook);
 
     @Delete
-    void deletBook(Item itemBook);
+    Completable deletBook(Item itemBook);
 
     @Query("Select * from Books")
-    LiveData<List<Item>> getAllFavoriteBooks();
+    Flowable<List<Item>> getAllFavoriteBooks();
 
     @Query("Select * from Books where id = :id")
-    LiveData<List<Item>> getBookById(String id);
+    Flowable<List<Item>> getBookById(String id);
 
 }

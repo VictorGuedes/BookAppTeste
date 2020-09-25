@@ -206,7 +206,7 @@
             app:layout_anchor="@id/app_bar"
             app:layout_anchorGravity="bottom|end"
             app:srcCompat="@drawable/ic_star_border_black_24dp"
-            android:onClick="saveAsFavorite"
+            android:onClick="saveDeleteFavorite"
             tools:ignore="VectorDrawableCompat" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
