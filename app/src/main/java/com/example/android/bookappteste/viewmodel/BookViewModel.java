@@ -3,12 +3,17 @@ package com.example.android.bookappteste.viewmodel;
 import android.util.Log;
 
 import androidx.hilt.lifecycle.ViewModelInject;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import androidx.paging.LivePagedListBuilder;
+import androidx.paging.PagedList;
 
 import com.example.android.bookappteste.data.models.BookResponse;
 import com.example.android.bookappteste.data.models.Item;
+import com.example.android.bookappteste.repository.BookDataSourceFactory;
 import com.example.android.bookappteste.repository.BookRepository;
+import com.example.android.bookappteste.repository.DataSourceBook;
 
 import java.util.List;
 
@@ -27,9 +32,14 @@ public class BookViewModel extends ViewModel {
 
     private MutableLiveData<Boolean> dataWasDeleted = new MutableLiveData<>();
 
+    private BookDataSourceFactory bookDataSourceFactory;
+    private LiveData<PagedList<Item>> bookPagedList;
+
+
     @ViewModelInject
     public BookViewModel(BookRepository repository){
         this.repository = repository;
+        //this.bookDataSourceFactory = new BookDataSourceFactory(repository);
     }
 
     public MutableLiveData<List<Item>> getBookList() {
@@ -46,6 +56,10 @@ public class BookViewModel extends ViewModel {
 
     public MutableLiveData<Boolean> getDataWasDeleted() {
         return dataWasDeleted;
+    }
+
+    public LiveData<PagedList<Item>> getBookPagedList() {
+        return bookPagedList;
     }
 
     public void insertBook(Item book){
@@ -78,6 +92,9 @@ public class BookViewModel extends ViewModel {
     }
 
     public void getBookListFromService(){
+       /* PagedList.Config pagedListConfig = new PagedList.Config.Builder().setEnablePlaceholders(false).setPageSize(40).build();
+        bookPagedList = (new LivePagedListBuilder(bookDataSourceFactory, pagedListConfig)).build();*/
+
         repository.getBook()
                 .subscribeOn(Schedulers.io())
                 .map(new Function<BookResponse, List<Item>>() {

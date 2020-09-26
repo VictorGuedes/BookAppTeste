@@ -25,9 +25,12 @@ public class BookRepository {
     }
 
     public Observable<BookResponse> getBook(){
-        return apiService.getBook(0, 20);
+        return apiService.getBook(0, 40);
     }
 
+    public Observable<BookResponse> getBookPaginated(int start, int end){
+        return apiService.getBook(start, end);
+    }
 
     public Completable deleteBook(Item item){
         return bookDao.deletBook(item);

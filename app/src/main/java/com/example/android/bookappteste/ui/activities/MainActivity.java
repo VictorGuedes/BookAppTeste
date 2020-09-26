@@ -8,11 +8,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.paging.PagedList;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.example.android.bookappteste.R;
 import com.example.android.bookappteste.data.models.Item;
 import com.example.android.bookappteste.databinding.ActivityMainBinding;
+import com.example.android.bookappteste.ui.adapter.MainRecyclerAdapterPaged;
 import com.example.android.bookappteste.ui.adapter.RecyclerBookListAdapter;
 import com.example.android.bookappteste.ui.fragments.FavoritesFragment;
 import com.example.android.bookappteste.viewmodel.BookViewModel;
@@ -40,10 +42,11 @@ public class MainActivity extends AppCompatActivity {
         bookViewModel = new ViewModelProvider(this).get(BookViewModel.class);
 
         initView();
-        observeData();
+
         bookViewModel.getBookListFromService();
         bookViewModel.getFavoriteBooksDB();
 
+        observeData();
     }
 
     private void initView(){
@@ -69,6 +72,15 @@ public class MainActivity extends AppCompatActivity {
                 adapter.setItems(items);
             }
         });
+
+        /*bookViewModel.getBookPagedList().observe(this, new Observer<PagedList<Item>>() {
+            @Override
+            public void onChanged(PagedList<Item> items) {
+                Log.d("Deu", items.toString());
+                adapter.submitList(items);
+            }
+        });*/
+
     }
 
     public void openFavorites(View view) {
