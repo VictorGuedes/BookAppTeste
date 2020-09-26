@@ -9,12 +9,12 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.bookappteste.R;
 import com.example.android.bookappteste.data.models.Item;
 import com.example.android.bookappteste.databinding.ActivityMainBinding;
 import com.example.android.bookappteste.ui.adapter.RecyclerBookListAdapter;
+import com.example.android.bookappteste.ui.fragments.FavoritesFragment;
 import com.example.android.bookappteste.viewmodel.BookViewModel;
 
 import java.util.ArrayList;
@@ -26,12 +26,9 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class MainActivity extends AppCompatActivity {
 
     private BookViewModel bookViewModel;
-    private RecyclerView recyclerView;
     private ActivityMainBinding activityMainBinding;
     private RecyclerBookListAdapter adapter;
-
-    private boolean requestFavorite = true;
-
+    private FavoritesFragment bottomSheetFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,20 +39,25 @@ public class MainActivity extends AppCompatActivity {
 
         bookViewModel = new ViewModelProvider(this).get(BookViewModel.class);
 
+        initView();
         observeData();
         bookViewModel.getBookListFromService();
+        bookViewModel.getFavoriteBooksDB();
 
     }
 
+    private void initView(){
+        bottomSheetFragment = new FavoritesFragment(bookViewModel);
+    }
+
     private void initializeRecycler(){
-        recyclerView = activityMainBinding.recyclerView;
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        recyclerView.setHasFixedSize(true);
+        activityMainBinding.recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        activityMainBinding.recyclerView.setHasFixedSize(true);
 
         List<Item> list = new ArrayList<>();
         adapter = new RecyclerBookListAdapter(list);
 
-        recyclerView.setAdapter(adapter);
+        activityMainBinding.recyclerView.setAdapter(adapter);
 
     }
 
@@ -67,5 +69,9 @@ public class MainActivity extends AppCompatActivity {
                 adapter.setItems(items);
             }
         });
+    }
+
+    public void openFavorites(View view) {
+        bottomSheetFragment.show(getSupportFragmentManager(), bottomSheetFragment.getTag());
     }
 }

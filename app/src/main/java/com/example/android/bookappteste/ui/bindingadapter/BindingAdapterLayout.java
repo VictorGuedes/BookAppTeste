@@ -33,17 +33,22 @@ public class BindingAdapterLayout {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 Context context = imageView.getContext();
                 Intent intent = new Intent(context, DetailActivity.class);
                 intent.putExtra(BOOK, (Serializable) book);
 
-                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                        (Activity) context,
-                        imageView,
-                        ViewCompat.getTransitionName(imageView)
-                );
+                if (view.getContext() instanceof Activity) {
+                    ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            (Activity) context,
+                            imageView,
+                            ViewCompat.getTransitionName(imageView)
+                    );
 
-                context.startActivity(intent, options.toBundle());
+                    context.startActivity(intent, options.toBundle());
+                } else {
+                    context.startActivity(intent);
+                }
             }
         });
 

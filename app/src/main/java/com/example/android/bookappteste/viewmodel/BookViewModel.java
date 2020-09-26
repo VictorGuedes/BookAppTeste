@@ -3,7 +3,6 @@ package com.example.android.bookappteste.viewmodel;
 import android.util.Log;
 
 import androidx.hilt.lifecycle.ViewModelInject;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -22,7 +21,7 @@ public class BookViewModel extends ViewModel {
 
     private BookRepository repository;
     private MutableLiveData<List<Item>> bookList = new MutableLiveData<>();
-    private LiveData<List<Item>> favoriteBooks = null;
+    private MutableLiveData<List<Item>> favoriteBooks = new MutableLiveData<>();
 
     private MutableLiveData<Boolean> dataWasInsert = new MutableLiveData<>();
 
@@ -31,14 +30,13 @@ public class BookViewModel extends ViewModel {
     @ViewModelInject
     public BookViewModel(BookRepository repository){
         this.repository = repository;
-        //favoriteBooks = repository.getFavoriteBooks();
     }
 
     public MutableLiveData<List<Item>> getBookList() {
         return bookList;
     }
 
-    public LiveData<List<Item>> getFavoriteBooks() {
+    public MutableLiveData<List<Item>> getFavoriteBooks() {
         return favoriteBooks;
     }
 
@@ -59,6 +57,7 @@ public class BookViewModel extends ViewModel {
                         throwable -> dataWasInsert.setValue(false)
                 );
     }
+
     public void deleteBook(Item book){
         repository.deleteBook(book).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -69,7 +68,13 @@ public class BookViewModel extends ViewModel {
     }
 
     public void getFavoriteBooksDB(){
-        //favoriteBooks = repository.getFavoriteBooks();
+        repository.getFavoriteBooks()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        favorites -> {favoriteBooks.setValue(favorites);},
+                        error-> {Log.e("ERRO", error.getMessage());}
+                );
     }
 
     public void getBookListFromService(){
