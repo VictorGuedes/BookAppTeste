@@ -19,6 +19,8 @@ import com.example.android.bookappteste.databinding.ActivityDetailBinding;
 import com.example.android.bookappteste.ui.bindingadapter.BindingAdapterLayout;
 import com.example.android.bookappteste.viewmodel.BookViewModel;
 
+import java.util.List;
+
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
@@ -27,6 +29,8 @@ public class DetailActivity extends AppCompatActivity {
     private ActivityDetailBinding activityDetailBinding;
     private Item actualBook;
     private BookViewModel bookViewModel;
+
+    private boolean isBookInDatabase = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +44,7 @@ public class DetailActivity extends AppCompatActivity {
 
         populateView();
 
+        bookViewModel.getFavoriteBookByID(actualBook.getId());
         observeData();
     }
 
@@ -53,17 +58,10 @@ public class DetailActivity extends AppCompatActivity {
         Glide.with(this)
                 .load(actualBook.getVolumeInfo().getImageLinks().getSmallThumbnail())
                 .into(activityDetailBinding.imageViewDetails);
-
-        setFavoriteButtonColor();
-    }
-
-    private void setFavoriteButtonColor(){
-        if (actualBook.isBookInDatabase()) activityDetailBinding.fab.setBackgroundTintList(ContextCompat.getColorStateList(DetailActivity.this, R.color.yellow_background));
-        else activityDetailBinding.fab.setBackgroundTintList(ContextCompat.getColorStateList(DetailActivity.this, R.color.colorAccent));
     }
 
     public void saveDeleteFavorite(View view) {
-        if (actualBook.isBookInDatabase()) bookViewModel.deleteBook(actualBook);
+        if (isBookInDatabase) bookViewModel.deleteBook(actualBook);
         else bookViewModel.insertBook(actualBook);
     }
 
@@ -90,7 +88,7 @@ public class DetailActivity extends AppCompatActivity {
                 if (aBoolean){
                     Toast.makeText(DetailActivity.this, "Book was add", Toast.LENGTH_SHORT).show();
                     activityDetailBinding.fab.setBackgroundTintList(ContextCompat.getColorStateList(DetailActivity.this, R.color.yellow_background));
-                    actualBook.setBookInDatabase(true);
+                    isBookInDatabase = true;
                 } else {
                     Toast.makeText(DetailActivity.this, "Something went wrong :(", Toast.LENGTH_SHORT).show();
                 }
@@ -103,9 +101,22 @@ public class DetailActivity extends AppCompatActivity {
                 if (aBoolean){
                     Toast.makeText(DetailActivity.this, "Book was deleted", Toast.LENGTH_SHORT).show();
                     activityDetailBinding.fab.setBackgroundTintList(ContextCompat.getColorStateList(DetailActivity.this, R.color.colorAccent));
-                    actualBook.setBookInDatabase(false);
+                    isBookInDatabase = false ;
                 } else {
                     Toast.makeText(DetailActivity.this, "Something went wrong :(", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        bookViewModel.getFavoriteBooks().observe(this, new Observer<List<Item>>() {
+            @Override
+            public void onChanged(List<Item> items) {
+                if (!items.isEmpty()){
+                    activityDetailBinding.fab.setBackgroundTintList(ContextCompat.getColorStateList(DetailActivity.this, R.color.yellow_background));
+                    isBookInDatabase = true;
+                } else {
+                    activityDetailBinding.fab.setBackgroundTintList(ContextCompat.getColorStateList(DetailActivity.this, R.color.colorAccent));
+                    isBookInDatabase = false;
                 }
             }
         });

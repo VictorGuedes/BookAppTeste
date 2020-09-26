@@ -91,6 +91,16 @@ public class BookViewModel extends ViewModel {
                 );
     }
 
+    public void getFavoriteBookByID(String id){
+        repository.getBookById(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        favorites -> {favoriteBooks.setValue(favorites);},
+                        error-> {Log.e("ERRO", error.getMessage());}
+                );
+    }
+
     public void getBookListFromService(){
        /* PagedList.Config pagedListConfig = new PagedList.Config.Builder().setEnablePlaceholders(false).setPageSize(40).build();
         bookPagedList = (new LivePagedListBuilder(bookDataSourceFactory, pagedListConfig)).build();*/

@@ -43,11 +43,9 @@ public class BindingAdapterLayout {
                             imageView,
                             ViewCompat.getTransitionName(imageView)
                     );
-                    book.setBookInDatabase(false);
                     intent.putExtra(BOOK, (Serializable) book);
                     context.startActivity(intent, options.toBundle());
                 } else {
-                    book.setBookInDatabase(true);
                     intent.putExtra(BOOK, (Serializable) book);
                     context.startActivity(intent);
                 }

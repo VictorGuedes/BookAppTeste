@@ -43,9 +43,6 @@ public class Item implements Serializable {
     @Expose
     private SaleInfo saleInfo;
 
-    @Ignore
-    private boolean bookInDatabase = false;
-
     public String getKind() {
         return kind;
     }
@@ -92,13 +89,5 @@ public class Item implements Serializable {
 
     public void setSaleInfo(SaleInfo saleInfo) {
         this.saleInfo = saleInfo;
-    }
-
-    public boolean isBookInDatabase() {
-        return bookInDatabase;
-    }
-
-    public void setBookInDatabase(boolean bookInDatabase) {
-        this.bookInDatabase = bookInDatabase;
     }
 }
