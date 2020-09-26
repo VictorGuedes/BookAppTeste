@@ -3,7 +3,7 @@ package com.example.android.bookappteste.data.models;
 
 import androidx.room.Embedded;
 import androidx.room.Entity;
-import androidx.room.Ignore;
+import androidx.room.TypeConverters;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -22,7 +22,7 @@ public class VolumeInfo implements Serializable {
     @Expose
     private String subtitle;
 
-    @Ignore
+    @TypeConverters(AuthorTypeConverter.class)
     @SerializedName("authors")
     @Expose
     private List<String> authors;
