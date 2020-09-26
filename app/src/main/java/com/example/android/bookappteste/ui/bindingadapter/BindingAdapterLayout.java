@@ -36,7 +36,6 @@ public class BindingAdapterLayout {
 
                 Context context = imageView.getContext();
                 Intent intent = new Intent(context, DetailActivity.class);
-                intent.putExtra(BOOK, (Serializable) book);
 
                 if (view.getContext() instanceof Activity) {
                     ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
@@ -44,9 +43,12 @@ public class BindingAdapterLayout {
                             imageView,
                             ViewCompat.getTransitionName(imageView)
                     );
-
+                    book.setBookInDatabase(false);
+                    intent.putExtra(BOOK, (Serializable) book);
                     context.startActivity(intent, options.toBundle());
                 } else {
+                    book.setBookInDatabase(true);
+                    intent.putExtra(BOOK, (Serializable) book);
                     context.startActivity(intent);
                 }
             }

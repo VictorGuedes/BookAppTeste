@@ -4,6 +4,7 @@ package com.example.android.bookappteste.data.models;
 import androidx.annotation.NonNull;
 import androidx.room.Embedded;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.Expose;
@@ -41,6 +42,9 @@ public class Item implements Serializable {
     @SerializedName("saleInfo")
     @Expose
     private SaleInfo saleInfo;
+
+    @Ignore
+    private boolean bookInDatabase = false;
 
     public String getKind() {
         return kind;
@@ -88,5 +92,13 @@ public class Item implements Serializable {
 
     public void setSaleInfo(SaleInfo saleInfo) {
         this.saleInfo = saleInfo;
+    }
+
+    public boolean isBookInDatabase() {
+        return bookInDatabase;
+    }
+
+    public void setBookInDatabase(boolean bookInDatabase) {
+        this.bookInDatabase = bookInDatabase;
     }
 }
